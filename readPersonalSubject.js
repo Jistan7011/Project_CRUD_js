@@ -1,14 +1,14 @@
 let mysql = require('mysql')
-let express = require('express')
+import {connection} from './connection'
 const Input = require('./userInput');
 
-let connection = mysql.createConnection({
-  host:process.env.DB_HOST,
-  port:process.env.DB_PORT,
-  user:process.env.DB_USER,
-  password:process.env.DB_PASSWORD,
-  database:process.env.DB_NAME
-})
+// let connection = mysql.createConnection({
+//   host:process.env.DB_HOST,
+//   port:process.env.DB_PORT,
+//   user:process.env.DB_USER,
+//   password:process.env.DB_PASSWORD,
+//   database:process.env.DB_NAME
+// })
 
 async function read_personal_subject(num){
   console.clear();
@@ -20,6 +20,7 @@ async function read_personal_subject(num){
       console.log('error:'+error);
     } else {
       console.log('<수강 신청 목록>')
+      console.log(`=========================================================`)
       console.log(`강의번호\t|강의명\t\t|담당교수\t|수강인원`);
       console.log(`=========================================================`)
       for(var i = 0; i < result.length; i++){

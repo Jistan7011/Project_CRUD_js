@@ -1,5 +1,6 @@
 // Node.js의 모듈을 불러옵니다. 'userInput'이라는 파일의 모듈을 Input으로 사용합니다.
 const Input = require('./userInput');
+const read_subject=require('./read_subject')
 
 // MySQL 데이터베이스와 통신할 수 있는 'mysql' 모듈을 불러옵니다.
 let mysql = require('mysql');
@@ -42,6 +43,7 @@ async function main(){
       console.log('삭제');
     }else if(menu==='4'){  // 데이터 목록 출력
       console.log('목록');
+      read_subject.read_sjt(connection)
     }else if(menu==='5'){  // 프로그램 종료
       console.log('프로그램 종료~');
       connection.end();

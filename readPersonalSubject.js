@@ -10,23 +10,40 @@ let connection = mysql.createConnection({
   database:process.env.DB_NAME
 })
 
-async function read_personal_subject(){
-  console.log(`학번 : `);
-  let num = await Input.getUserInput();
-  // const sql = `SELECT * FROM LIST WHERE num=${num}`;
-  const sql = `select sjt.sub_num '강의번호', sjt.sub_name '강의명', sjt.sub_professor '담당교수', sjt.sub_person '수강인원' from list as li join subject as sjt on li.sub_num = sjt.sub_num WHERE num=${num}`;
-
-
+async function read_personal_subject(num){
+  console.clear();
+  // console.log(`학번 : `);
+  // let num = await Input.getUserInput();
+  let sql = `select sjt.sub_num, sjt.sub_name, sjt.sub_professor, sjt.sub_person from list as li join subject as sjt on li.sub_num = sjt.sub_num WHERE num=${num}`;
   connection.query(sql, (error, result, fields) => {
-    
     if(error){
       console.log('error:'+error);
     } else {
+      console.log('<수강 신청 목록>')
+      console.log(`강의번호\t|강의명\t\t|담당교수\t|수강인원`);
+      console.log(`=========================================================`)
       for(var i = 0; i < result.length; i++){
-        console.log(result[i].sjt.sub_num + "|t" + result[i].sjt.sub_name + "|t" + result[i].sjt.sub_professor + "|t" +result[i].sjt.sub_person);
+        console.log(result[i].sub_num + "\t\t|" + result[i].sub_name + "\t\t|" + result[i].sub_professor + "\t\t|" +result[i].sub_person);
       }
     }
   });
 }
 
-read_personal_subject();
+read_personal_subject(3);
+module.exports = {read_personal_subject};
+
+
+// list에 임의의 자료 추가
+// async function list_update(){
+//   for(var i=1; i<6; i++){
+//     for(var j=1; j<5; j++){
+//       for(var k=1; k<4; k++){
+//         let sql = `insert into list values(${i},${(j*100)+k},now())`
+//         // console.log(`${i}/${(j*100)+k}`)
+//         connection.query(sql)
+//       }
+//     }
+//   }
+// }
+
+// list_update();

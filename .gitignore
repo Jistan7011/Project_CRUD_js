@@ -1,2 +1,6 @@
 .env
+.gitignore
+save.js
 node_modules/
+create_data.js
+promise.js

@@ -1,4 +1,5 @@
 const readline = require("readline");
+const Input = require('./userInput');
 let mysql = require("mysql");
 
 let connection = mysql.createConnection({
@@ -15,17 +16,31 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-// 입력 함수
-function getUserInput() {
-  return new Promise((resolve, reject) => {
-    rl.on("line", (line) => {
-      resolve(line);
-    });
-  });
-}
+// // 입력 함수
+// function getUserInput() {
+//   return new Promise((resolve, reject) => {
+//     rl.on("line", (line) => {
+//       resolve(line);
+//     });
+//   });
+// }
 
 async function checkConditions(num, sbj_num) {
   let possible = true;
+
+  // 0. 존재하는 과목인지
+  const validPromise = new Promise((resolve, reject) => {
+    let sql = `select count(*) cnt from subject 
+    where subject.sub_num=?`;
+    connection.query(sql, [sbj_num], (err, result, fields) => {
+      if (err) return reject(err);
+      if (result[0].cnt === 0) {
+        possible = false;
+        console.log("▷ 유효하지 않은 과목번호입니다.");
+      }
+      resolve();
+    });
+  });
 
   // 1. 중복 신청인지
   const dupPromise = new Promise((resolve, reject) => {
@@ -92,7 +107,7 @@ async function updateList(num) {
 
   // 과목번호 입력
   console.log("▶ 수강신청할 과목번호를 입력해주세요: ");
-  let sbj_num = await getUserInput();
+  let sbj_num = await Input.getUserInput();
 
   // 수강신청 가능 조건 검사
   if (!(await checkConditions(num, sbj_num))){
@@ -125,7 +140,7 @@ async function run(num) {
   while (!exit) {
     await updateList(num);
     console.log("▶ 더이상 신청을 원하시지 않는다면 'exit'를 입력하세요.");
-    const input = await getUserInput();
+    const input = await Input.getUserInput();
     if (input.trim().toLowerCase() === "exit") {
       exit = true;
     }

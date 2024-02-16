@@ -1,5 +1,4 @@
 let mysql = require('mysql')
-const Input = require('./userInput');
 const Table = require('./make_table')
 
 let connection = mysql.createConnection({
@@ -12,16 +11,15 @@ let connection = mysql.createConnection({
 
 async function read_personal_subject(num){
   console.clear();
-  let sql = `select sjt.sub_num, sjt.sub_name, sjt.sub_professor, sjt.sub_person from list as li join subject as sjt on li.sub_num = sjt.sub_num WHERE num=${num}`;
+  let sql = `select sbj.sub_num, sbj.sub_name, sbj.sub_professor, sbj.sub_person from list as li join subject as sbj on li.sub_num = sbj.sub_num WHERE num=${num}`;
   connection.query(sql, (error, result, fields) => {
-    let title = ['강의번호','강의명','담당교수','수강인원']
     if(error){
       console.log('error:'+error);
     } else {
       console.log('<수강 신청 목록>')
-      console.log(`==============================================================`)
-      Table.make_table(title)
-      console.log(`==============================================================`)
+      console.log(`==========================================================================`)
+      console.log(' 강의번호\t| 강의명\t     | 담당교수 \t  | 수강인원')
+      console.log(`==========================================================================`)
       for(var i = 0; i < result.length; i++){
         // console.log(result[i])
         Table.make_table(result[i])
@@ -30,7 +28,7 @@ async function read_personal_subject(num){
   });
 }
 
-read_personal_subject(4);
+// read_personal_subject(4);
 module.exports = {read_personal_subject};
 
 

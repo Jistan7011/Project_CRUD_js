@@ -35,6 +35,6 @@ function make_table(colum){
   }
   console.log(`'${print}'`)
 }
-make_table(colum)
+// make_table(colum)
 module.exports = {make_table};
 

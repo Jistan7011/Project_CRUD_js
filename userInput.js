@@ -1,22 +1,20 @@
 const readline = require('readline');
 
-// input과 output을 사용하기 위해서 다음과 같이 정의
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
+  input: process.stdin,
+  output: process.stdout
 });
 
 function getUserInput() {
-    return new Promise((resolve, reject) => {
-      // 첫번째 인자 : "close","line" 등
-        rl.on('line', (line) => {
-            resolve(line);
-        })
-        // .on('close',()=>{
-        //     process.exit();
-        // });
+  return new Promise((resolve, reject) => {
+    rl.question('사용자 입력을 입력하세요: ', (answer) => {
+      resolve(answer);
+      // 더 이상 사용자 입력을 받지 않을 때는 아래의 주석을 해제하여 rl.close();를 호출합니다.
+      // rl.close();
     });
+  });
 }
-// module.exports를 이용하여 함수를 외부로 보낸다.
-// 다른 파일에서 require()를 이용하여 호출해서 사용
-module.exports = {getUserInput};
+
+module.exports = {
+  getUserInput
+};

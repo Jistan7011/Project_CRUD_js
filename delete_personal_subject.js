@@ -43,5 +43,3 @@ connection.connect(async(err) => {
 });
 }
 module.exports={delete_personal_subject}
-
-module.exports = {delete_personal_subject};

@@ -10,7 +10,7 @@ let connection = mysql.createConnection({
 });
 
 function delete_personal_subject(){
-  
+
 connection.connect(async(err) => {
   if (err) return console.error(err.message);
   try {

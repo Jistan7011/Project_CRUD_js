@@ -23,8 +23,9 @@ async function select_menu(num) {
       console.log("▶ 수강확인 및 삭제");
       // 수강확인 함수
       await rps.read_personal_subject(num);
+      await Input.getEnter();
       // 과목삭제 함수
-      await dps.delete_personal_subject(num);
+      // await dps.delete_personal_subject(num);
       await Input.getEnterComment();
     } else if (menu === "2") {
       console.log("▶ 과목조회 및 수강신청");

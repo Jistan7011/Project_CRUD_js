@@ -9,6 +9,8 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
+function delete_personal_subject(){
+  
 connection.connect(async(err) => {
   if (err) return console.error(err.message);
   try {
@@ -22,6 +24,8 @@ connection.connect(async(err) => {
           else resolve(results);
         });
       });
+
+      console.log('Query Results:', results);
 
       if (results.affectedRows > 0) {
         console.log('Rows affected:', results.affectedRows);
@@ -37,4 +41,5 @@ connection.connect(async(err) => {
     connection.end();
   }
 });
-module.exports = {getUserInput};
+}
+module.exports={delete_personal_subject}

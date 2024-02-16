@@ -38,5 +38,5 @@ function getEnterComment() {
 module.exports = {
   getUserInput,
   getEnter,
-  getEnterComment,
+  getEnterComment
 };

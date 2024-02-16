@@ -21,6 +21,7 @@ async function select_menu(num) {
       await Input.getEnterComment();
     } else if (menu === "2") {
       console.log("▶ 과목조회 및 수강신청");
+      await rs.read_sjt()
       //수강신청 함수
       await ups.main(num);
       await Input.getEnterComment();

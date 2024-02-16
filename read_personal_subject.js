@@ -29,14 +29,15 @@ async function read_personal_subject(num){
         let professor = (result[i].sub_professor).toString()
         let person = (result[i].sub_person).toString()
         let colum =[num,name,professor,person]
-        // console.log(num.padEnd(10,' ')+'|'+name.padEnd(15,' ')+'|'+professor.padEnd(10,' ')+'|'+person.padEnd(10,' '));
-        make_table(colum)
+        // console.log(result[i])
+        console.log(num.padEnd(10,' ')+'|'+name.padEnd(15,' ')+'|'+professor.padEnd(10,' ')+'|'+person.padEnd(10,' '));
+        // make_table(result[i])
       }
     }
   });
 }
 
-read_personal_subject(3);
+// read_personal_subject(3);
 module.exports = {read_personal_subject};
 
 

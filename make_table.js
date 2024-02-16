@@ -1,40 +1,35 @@
-// let a = '가가가가가eeeee'
-// let b = '가가가'
-// let c = 'ekeeeeeeeedeeee'
-// let d = '2'
-
-// console.log(a.padEnd(10,' ')+'|'+b.padEnd(10,' ')+'|'+c.padEnd(10,' ')+'|'+d.padEnd(10,' ')+'|')
-// console.log(c.padEnd(10,' ')+'|'+b.padEnd(10,' ')+'|'+c.padEnd(10,' ')+'|'+d.padEnd(10,' ')+'|')
-
-
 let colum = new Array();
 const ko = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-colum = ['가','나나나','c']
-let print =''
-function make_table(colum){
+// colum = ['가','나나나','c']
+let print
+
+let testObject =  {
+sub_num: 101,
+sub_name: '열역학',
+sub_professor: '김정수',
+sub_person: 40
+}
+let title = ['강의번호','강의명','담당교수','수강인원']
+
+function make_table(object){
+  let colum
+  if(typeof object=='object'){
+    colum = Object.values(object)
+  }else{
+    colum = object
+  }
+  let limit = 18
 
   for(let i=0; i<colum.length; i++){
-
+    let str = colum[i].toString()
+    let space = limit-str.length
     if(i==colum.length-1){
-      if(ko.test(colum[i])){
-        let space = 15-((colum[i].length)*2)
-        print+=`${colum[i]}.padNum(${space},' ')`
-      }else{
-        let space = 15-(colum[i].length)
-        print+=`${colum[i]}.padNum(${space},' ')`
-      }
+      console.log(str.padEnd(space,'*'))
     }else{
-      if(ko.test(colum[i])){
-        let space = 15-((colum[i].length)*2)
-        print+=`${colum[i]}.padNum(${space},' ')+'|'+`
-      }else{
-        let space = 15-(colum[i].length)
-        print+=`${colum[i]}.padNum(${space},' ')+'|'+`
-      }
+      process.stdout.write(str.padEnd(space,'*')+'|')
     }
   }
-  console.log(`'${print}'`)
 }
-// make_table(colum)
-module.exports = {make_table};
-
+make_table(testObject)
+make_table(title)
+module.exports = {make_table}

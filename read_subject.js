@@ -38,7 +38,7 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-
+async function read_sjt(){
 connection.connect((err) => {
   if (err) return console.error(err.message);
 
@@ -59,5 +59,6 @@ connection.connect((err) => {
   // close the database connection
   connection.end();
 });
+}
 
-// module.exports={read_sjt}
+module.exports={read_sjt}

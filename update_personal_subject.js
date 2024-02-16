@@ -1,5 +1,6 @@
 const readline = require("readline");
 const Input = require('./userInput');
+const rs = require("./read_subject");
 let mysql = require("mysql");
 let connection = require("./connect");
 
@@ -59,7 +60,7 @@ async function checkConditions(num, sbj_num) {
     group by student.num;`;
     connection.query(sql, [num], (err, result, fields) => {
       if (err) return reject(err);
-      if (result[0].sum > result[0].credit) {
+      if (result != null && result[0].sum > result[0].credit) {
         possible = false;
         console.log("▶ 이수 학점을 초과했습니다.");
       }
@@ -121,6 +122,8 @@ async function main(num) {
   let exit = false;
   while (!exit) {
     console.clear();
+    console.log("과목조회");
+    // await rs.read_sjt(num);
     await updateList(num);
     console.log("▶ 더이상 신청을 원하시지 않는다면 'exit'를 입력하세요.");
     const input = await Input.getUserInput();

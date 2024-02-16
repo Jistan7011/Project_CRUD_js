@@ -1,29 +1,7 @@
 const readline = require("readline");
 const Input = require('./userInput');
 let mysql = require("mysql");
-
-let connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
-
-// // 입력 함수 : input과 output을 사용하기 위해서 다음과 같이 정의
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
-
-// // // 입력 함수
-// // function getUserInput() {
-// //   return new Promise((resolve, reject) => {
-// //     rl.on("line", (line) => {
-// //       resolve(line);
-// //     });
-// //   });
-// // }
+let connection = require("./connect");
 
 async function checkConditions(num, sbj_num) {
   let possible = true;
@@ -36,7 +14,7 @@ async function checkConditions(num, sbj_num) {
       if (err) return reject(err);
       if (result[0].cnt === 0) {
         possible = false;
-        console.log("▷ 유효하지 않은 과목번호입니다.");
+        console.log("▶ 유효하지 않은 과목번호입니다.");
       }
       resolve();
     });
@@ -51,7 +29,7 @@ async function checkConditions(num, sbj_num) {
       if (err) return reject(err);
       if (result[0].cnt > 0) {
         possible = false;
-        console.log("▷ 중복 신청은 불가합니다.");
+        console.log("▶ 중복 신청은 불가합니다.");
       }
       resolve();
     });
@@ -66,22 +44,24 @@ async function checkConditions(num, sbj_num) {
       if (err) return reject(err);
       if (result[0].cnt > result[0].sub_person) {
         possible = false;
-        console.log("▷ 신청 인원이 마감되었습니다.");
+        console.log("▶ 신청 인원이 마감되었습니다.");
       }
       resolve();
     });
   });
 
-  // // 3. 학점 초과하지 않는지
+  // 3. 학점 초과하지 않는지
   const creditPromise = new Promise((resolve, reject) => {
-    const sql = `select count(*) cnt, credit from list join student 
-    on list.num = student.num
-    where student.num=?`;
+    const sql = `select student.num num, sum(subject.sub_credit) sum, student.credit from 
+    (list join student on list.num = student.num) join subject
+    on list.sub_num = subject.sub_num
+    where student.num=?
+    group by student.num;`;
     connection.query(sql, [num], (err, result, fields) => {
       if (err) return reject(err);
-      if (result[0].cnt > result[0].credit) {
+      if (result[0].sum > result[0].credit) {
         possible = false;
-        console.log("▷ 이수 학점을 초과했습니다.");
+        console.log("▶ 이수 학점을 초과했습니다.");
       }
       resolve();
     });
@@ -129,7 +109,8 @@ async function updateList(num) {
     where subject.sub_num=?`;
   connection.query(sql, [sbj_num], (err, result, fields) => {
     if (err) return console.error(err.message);
-    console.log(`▶▷ [${result[0].sub_name}]이 신청 완료되었습니다.`);
+    console.log(`▶ [${result[0].sub_name}]이 신청 완료되었습니다.`);
+    Input.getEnterComment();
   });
 
   connection.end();
@@ -147,12 +128,11 @@ async function main(num) {
       exit = true;
     }
   }
-  console.log("Bye~");
+  // console.log("Bye~");
   // process.exit();
   return;
 }
 
 // module.exports를 이용하여 함수를 외부로 보낸다.
 // 다른 파일에서 require()를 이용하여 호출해서 사용
-module.exports = { updateList };
-module.exports = { main };
+module.exports = { updateList, main };

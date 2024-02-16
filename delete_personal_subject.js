@@ -10,13 +10,14 @@
   });
 
 function delete_personal_subject(){
-
 connection.connect(async(err) => {
   if (err) return console.error(err.message);
   try {
     let sql = `DELETE FROM list WHERE sub_num = ?`;
     try {
-      let data = await Input.getUserInput();
+      let sql = `DELETE FROM list WHERE sub_num = ?`;
+      try {
+        let data = await Input.getUserInput();
 
         let results = await new Promise((resolve, reject) => {
           connection.query(sql, data, (error, results, fields) => {
@@ -25,7 +26,7 @@ connection.connect(async(err) => {
           });
         });
 
-        console.log('Query Results:', results);
+        // console.log('Query Results:', results);
 
         if (results.affectedRows > 0) {
           console.log('Rows affected:', results.affectedRows);
@@ -41,5 +42,6 @@ connection.connect(async(err) => {
       connection.end();
     }
   });
-  }
-  module.exports={delete_personal_subject}
+};
+
+module.exports = {delete_personal_subject};

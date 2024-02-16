@@ -2,7 +2,7 @@ const Input = require("./userInput");
 const ups = require("./update_personal_subject");
 const rs = require("./read_subject");
 const rps = require("./read_personal_subject");
-// const dps = require("./delete_personal_subject");
+const dps = require("./delete_personal_subject");
 
 let mysql = require("mysql");
 
@@ -24,7 +24,7 @@ async function select_menu(num) {
       // 수강확인 함수
       await rps.read_personal_subject(num);
       // 과목삭제 함수
-      await Input.getEnter();
+      await dps.delete_personal_subject(num);
       await Input.getEnterComment();
     } else if (menu === "2") {
       console.log("▶ 과목조회 및 수강신청");

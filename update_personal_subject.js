@@ -2,7 +2,14 @@ const readline = require("readline");
 const Input = require('./userInput');
 const rs = require("./read_subject");
 let mysql = require("mysql");
-let connection = require("./connect");
+
+let connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
 async function checkConditions(num, sbj_num) {
   let possible = true;
@@ -43,7 +50,8 @@ async function checkConditions(num, sbj_num) {
     where subject.sub_num=?`;
     connection.query(sql, [sbj_num], (err, result, fields) => {
       if (err) return reject(err);
-      if (result[0].cnt > result[0].sub_person) {
+      // console.log(result);
+      if (result[0].cnt !== 0 && result[0].cnt >= result[0].sub_person) {
         possible = false;
         console.log("▶ 신청 인원이 마감되었습니다.");
       }
@@ -61,7 +69,7 @@ async function checkConditions(num, sbj_num) {
     connection.query(sql, [num], (err, result, fields) => {
       if (err) return reject(err);
       // console.log(result);
-      if (result.length !== 0 && result[0].sum > result[0].credit) {
+      if (result.length !== 0 && result[0].sum >= result[0].credit) {
         possible = false;
         console.log("▶ 이수 학점을 초과했습니다.");
       }

@@ -1,6 +1,6 @@
 let mysql = require('mysql')
 const Input = require('./userInput');
-const table = require('./make_table');
+import {make_table} from './make_table.js'
 
 let connection = mysql.createConnection({
   host:process.env.DB_HOST,
@@ -19,18 +19,19 @@ async function read_personal_subject(num){
     if(error){
       console.log('error:'+error);
     } else {
-      console.log('<수강 신청 목록>')
+      let title = ['강의번호','강의명','담당교수','수강인원']
       console.log(`=========================================================`)
-      console.log(`강의번호\t|강의명\t\t|담당교수\t|수강인원`);
+      make_table(title)
       console.log(`=========================================================`)
       for(var i = 0; i < result.length; i++){
-        let num = (result[i].sub_num).toString()
-        let name = (result[i].sub_name).toString()
-        let professor = (result[i].sub_professor).toString()
-        let person = (result[i].sub_person).toString()
-        let colum =[num,name,professor,person]
+        // let num = (result[i].sub_num).toString()
+        // let name = (result[i].sub_name).toString()
+        // let professor = (result[i].sub_professor).toString()
+        // let person = (result[i].sub_person).toString()
+        // let colum =[num,name,professor,person]
+        // console.log(result[i])
         // console.log(num.padEnd(10,' ')+'|'+name.padEnd(15,' ')+'|'+professor.padEnd(10,' ')+'|'+person.padEnd(10,' '));
-        make_table(colum)
+        make_table(result[i])
       }
     }
   });

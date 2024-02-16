@@ -60,7 +60,8 @@ async function checkConditions(num, sbj_num) {
     group by student.num;`;
     connection.query(sql, [num], (err, result, fields) => {
       if (err) return reject(err);
-      if (result != null && result[0].sum > result[0].credit) {
+      // console.log(result);
+      if (result.length !== 0 && result[0].sum > result[0].credit) {
         possible = false;
         console.log("▶ 이수 학점을 초과했습니다.");
       }
@@ -111,22 +112,18 @@ async function updateList(num) {
   connection.query(sql, [sbj_num], (err, result, fields) => {
     if (err) return console.error(err.message);
     console.log(`▶ [${result[0].sub_name}]이 신청 완료되었습니다.`);
-    Input.getEnterComment();
+    Input.getEnter();
   });
 
   connection.end();
 }
 
 async function main(num) {
-  console.clear();
   let exit = false;
   while (!exit) {
-    console.clear();
-    console.log("과목조회");
-    // await rs.read_sjt(num);
     await updateList(num);
     console.log("▶ 더이상 신청을 원하시지 않는다면 'exit'를 입력하세요.");
-    const input = await Input.getUserInput();
+    const input = await Input.getEnter();
     if (input.trim().toLowerCase() === "exit") {
       exit = true;
     }

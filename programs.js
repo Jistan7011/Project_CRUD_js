@@ -2,7 +2,8 @@ const Input = require("./userInput");
 const ups = require("./update_personal_subject");
 const rs = require("./read_subject");
 const rps = require("./read_personal_subject");
-const dps = require("./delete_personal_subject");
+// const dps = require("./delete_personal_subject");
+
 let mysql = require("mysql");
 
 let connection = mysql.createConnection({
@@ -20,15 +21,18 @@ async function select_menu(num) {
     let menu = await Input.getUserInput();
     if (menu === "1") {
       console.log("▶ 수강확인 및 삭제");
-      //수강확인 함수
+      // 수강확인 함수
       await rps.read_personal_subject(num);
-      //과목삭제 함수
-      // await dps.
+      // 과목삭제 함수
+      await Input.getEnter();
       await Input.getEnterComment();
     } else if (menu === "2") {
       console.log("▶ 과목조회 및 수강신청");
+      // 과목조회 함수
+      // 오류 : 재조회시 handshake 오류 발생
       await rs.read_sjt()
-      //수강신청 함수
+      await Input.getEnter();
+      // 수강신청 함수
       await ups.main(num);
       await Input.getEnterComment();
     } else if (menu === "3") {

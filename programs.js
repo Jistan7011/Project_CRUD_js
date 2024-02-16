@@ -1,47 +1,55 @@
-const Input = require('./userInput');
-let mysql = require('mysql');
+const Input = require("./userInput");
+const ups = require("./update_personal_subject");
+const rs = require("./read_subject");
+const rps = require("./read_personal_subject");
+// const dps = require("./delete_personal_subject");
+
+let mysql = require("mysql");
 
 let connection = mysql.createConnection({
-  host:process.env.DB_HOST,
-  port:process.env.DB_PORT,
-  user:process.env.DB_USER,
-  password:process.env.DB_PASSWORD,
-  database:process.env.DB_NAME
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
-async function select_menu(){
-  console.clear();
-  connection.connect();
-  while(true){
-    console.log(`1. 데이터입력 2.데이터수정 3.데이터삭제 4.목록  5.종료`);
+async function select_menu(num) {
+  while (true) { 
+    console.clear();
+    console.log(`1.<수강확인 및 삭제> 2.<과목조회 및 수강신청> 3.<로그아웃>`);
     let menu = await Input.getUserInput();
-    if(menu==='1') {
-      console.log('제목입력>');
-      let title = await Input.getUserInput();
-      console.log('');
-      let sql = `INSERT INTO todos(title,completed) VALUES(?,false)`;
-      connection.query(sql,[title]);
-    }else if(menu==='2'){
-      console.log('수정');
-    }else if(menu==='3'){    
-      console.log('삭제');
-    }else if(menu==='4'){ 
-      console.log('목록');
-    }else if(menu==='5'){ 
-      console.log('프로그램 종료~');
+    if (menu === "1") {
+      console.log("▶ 수강확인 및 삭제");
+      // 수강확인 함수
+      await rps.read_personal_subject(num);
+      // 과목삭제 함수
+      await Input.getEnter();
+      await Input.getEnterComment();
+    } else if (menu === "2") {
+      console.log("▶ 과목조회 및 수강신청");
+      // 과목조회 함수
+      // 오류 : 재조회시 handshake 오류 발생
+      await rs.read_sjt()
+      await Input.getEnter();
+      // 수강신청 함수
+      await ups.main(num);
+      await Input.getEnterComment();
+    } else if (menu === "3") {
+      console.log("▶ 로그아웃");
+      console.log("▶ 프로그램 종료");
       connection.end();
       process.exit();
-    }else{ 
-        console.log('메뉴를 잘못 선택하셨습니다.');
-    };
-    await wait(1000);
-    console.clear();
-  };
-};
+    } else {
+      console.log("▶ 메뉴를 잘못 선택하셨습니다.");
+      await Input.getEnter();
+    }
+  }
+}
 
 // const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay));
 
-async function login(){
+async function login() {
   console.clear();
   if (!connection || connection.state !== "connected") {
     connection = mysql.createConnection({
@@ -50,33 +58,38 @@ async function login(){
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-    });}
-  
+    });
+  }
+
+  console.log("▶ 학번을 입력하세요.");
   let num = await Input.getUserInput();
   let sql = `SELECT count(*) count FROM student where num =?`;
-  
-  connection.query(sql, [num], (error, results, fields) =>{
-    if (error) return console.error(error.message);
-    if (results[0].count) {
-      console.log('환영합니다.')
-      connection.end();
-      return (true)
-    } else {
-      console.log('학생이 없습니다. 다시 입력하세요.')
-      connection.end();
-      return (false)
-    }
-  })
-};
 
-async function run(){
+  return new Promise((resolve, reject) => {
+    connection.query(sql, [num], (error, results, fields) => {
+      if (error) return console.error(error.message);
+      if (results[0].count) {
+        resolve([true, num]);
+      } else {
+        console.log("▶ 해당하는 학생이 없습니다. 다시 입력하세요.");
+        resolve([false, num]);
+      }
+      connection.end();
+    });
+  });
+}
+
+async function run() {
   let success = false;
-  while(!success){
-    success = await login()
-    console.log(">")
-  };
-  await select_menu(num)
-};
-  run();
-  // select_menu();
+  let result;
+  while (!success) {
+    result = await login();
+    success = result[0];
+    if (!success){
+      await Input.getEnter();
+    }
+  }
+  await select_menu(result[1]);
+}
 
+run();

@@ -9,14 +9,14 @@
     database: process.env.DB_NAME,
   });
 
-  async function delete_personal_subject(num){
-    
-  connection.connect(async(err) => {
-    if (err) return console.error(err.message);
+function delete_personal_subject(){
+
+connection.connect(async(err) => {
+  if (err) return console.error(err.message);
+  try {
+    let sql = `DELETE FROM list WHERE sub_num = ?`;
     try {
-      let sql = `DELETE FROM list WHERE sub_num = ?`;
-      try {
-        let data = await Input.getUserInput();
+      let data = await Input.getUserInput();
 
         let results = await new Promise((resolve, reject) => {
           connection.query(sql, data, (error, results, fields) => {

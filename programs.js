@@ -1,4 +1,5 @@
 const Input = require("./userInput");
+const read_subject=require('./read_subject')
 let mysql = require("mysql");
 
 let connection = mysql.createConnection({
@@ -18,6 +19,7 @@ async function select_menu() {
       console.log("수강확인 및 삭제");
     } else if (menu === "2") {
       console.log("과목조회 및 수강신청");
+      read_subject.read_sjt(connection)
     } else if (menu === "3") {
       console.log("로그아웃");
       console.log("프로그램 종료~");

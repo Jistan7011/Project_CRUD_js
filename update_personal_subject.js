@@ -10,20 +10,20 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-// 입력 함수 : input과 output을 사용하기 위해서 다음과 같이 정의
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// // 입력 함수 : input과 output을 사용하기 위해서 다음과 같이 정의
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
 
-// // 입력 함수
-// function getUserInput() {
-//   return new Promise((resolve, reject) => {
-//     rl.on("line", (line) => {
-//       resolve(line);
-//     });
-//   });
-// }
+// // // 입력 함수
+// // function getUserInput() {
+// //   return new Promise((resolve, reject) => {
+// //     rl.on("line", (line) => {
+// //       resolve(line);
+// //     });
+// //   });
+// // }
 
 async function checkConditions(num, sbj_num) {
   let possible = true;
@@ -135,9 +135,11 @@ async function updateList(num) {
   connection.end();
 }
 
-async function run(num) {
+async function main(num) {
+  console.clear();
   let exit = false;
   while (!exit) {
+    console.clear();
     await updateList(num);
     console.log("▶ 더이상 신청을 원하시지 않는다면 'exit'를 입력하세요.");
     const input = await Input.getUserInput();
@@ -146,12 +148,11 @@ async function run(num) {
     }
   }
   console.log("Bye~");
-  process.exit();
-  // return;
+  // process.exit();
+  return;
 }
-
-run(4);
 
 // module.exports를 이용하여 함수를 외부로 보낸다.
 // 다른 파일에서 require()를 이용하여 호출해서 사용
 module.exports = { updateList };
+module.exports = { main };

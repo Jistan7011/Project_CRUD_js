@@ -10,8 +10,10 @@ let connection = mysql.createConnection({
 });
 
 function delete_personal_subject(){
-  connection.connect(async(err) => {
-    if (err) return console.error(err.message);
+connection.connect(async(err) => {
+  if (err) return console.error(err.message);
+  try {
+    let sql = `DELETE FROM list WHERE sub_num = ?`;
     try {
       let sql = `DELETE FROM list WHERE sub_num = ?`;
       try {

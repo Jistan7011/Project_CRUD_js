@@ -29,6 +29,7 @@
 
 
 let mysql = require('mysql');
+const Table = require('./make_table')
 
 let connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -51,8 +52,9 @@ connection.connect((err) => {
       console.log('--')
       while(results[n])
       {
-          console.log(`${Object.values(results[n])[0]} \t ${Object.values(results[n])[1]} \t ${Object.values(results[n])[2]} \t ${Object.values(results[n])[3]} \t ${Object.values(results[n])[4]}`)
-          n=n+1
+        Table.make_table(results[n])
+          // console.log(`${Object.values(results[n])[0]} \t ${Object.values(results[n])[1]} \t ${Object.values(results[n])[2]} \t ${Object.values(results[n])[3]} \t ${Object.values(results[n])[4]}`)
+          n++
       }
   });
 

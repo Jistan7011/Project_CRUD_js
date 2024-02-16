@@ -39,8 +39,15 @@ let connection = mysql.createConnection({
 });
 
 async function read_sjt(){
-connection.connect((err) => {
-  if (err) return console.error(err.message);
+  if (!connection || connection.state !== "connected") {
+    connection = mysql.createConnection({
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+    });
+  }
 
   let sql = `SELECT * FROM subject`;
 
@@ -58,7 +65,6 @@ connection.connect((err) => {
 
   // close the database connection
   connection.end();
-});
 }
 
 module.exports={read_sjt}

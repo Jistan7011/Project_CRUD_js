@@ -2,7 +2,14 @@ const readline = require("readline");
 const Input = require('./userInput');
 const rs = require("./read_subject");
 let mysql = require("mysql");
-let connection = require("./connect");
+
+let connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
 async function checkConditions(num, sbj_num) {
   let possible = true;

@@ -1,7 +1,7 @@
 {
   "name": "miniproject02",
   "version": "1.0.0",
-  "description": "",
+  "description": "<학번>\r 이승수 : 1\r 변진석 : 2\r 이수정 : 3\r 오서진 : 4\r 웨이얀표 : 5",
   "main": "index.js",
   "scripts": {
     "start": "node --env-file .env"

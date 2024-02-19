@@ -17,10 +17,12 @@ async function checkConditions(num, sbj_num) {
   // 0. 존재하는 과목인지
   const validPromise = new Promise((resolve, reject) => {
     let sql = `select count(*) cnt from subject 
-    where subject.sub_num=?`;
+    where subject.sub_num=?`; // 과목 테이블 에서 입력받은 값 num값의 개수(count) 확인
     connection.query(sql, [sbj_num], (err, result, fields) => {
       if (err) return reject(err);
-      if (result[0].cnt === 0) {
+      if (result[0].cnt === 0) { // 데이터베이스에서 결과 값을 객체로 받아옴
+        //  result[0] cnt : 값  구조이 dictionary 구조이므로 .cnt(key)로 접근
+        // 해당하는 값이 없는 경우 cnt===0
         possible = false;
         console.log("▶ 유효하지 않은 과목번호입니다.");
       }
@@ -30,9 +32,9 @@ async function checkConditions(num, sbj_num) {
 
   // 1. 중복 신청인지
   const dupPromise = new Promise((resolve, reject) => {
-    let sql = `select count(*) cnt from list join subject 
-    on list.sub_num = subject.sub_num
-    where subject.sub_num=? and num=?`;
+      let sql = `select count(*) cnt from list join subject 
+      on list.sub_num = subject.sub_num
+      where subject.sub_num=? and num=?`; //수강 신청 테이블 list에서 과목번호와 학번을 특정하여 개수를 셈 
     connection.query(sql, [sbj_num, num], (err, result, fields) => {
       if (err) return reject(err);
       if (result[0].cnt > 0) {
@@ -47,11 +49,13 @@ async function checkConditions(num, sbj_num) {
   const capacityPromise = new Promise((resolve, reject) => {
     const sql = `select count(*) cnt, sub_person from list join subject 
     on list.sub_num = subject.sub_num
-    where subject.sub_num=?`;
+    where subject.sub_num=?`;//cnt(수강 신청 테이블 list에서 특정 과목번호 count 조회==현재 신청인원) 
+    //sub_person(수강 최대 인원)
     connection.query(sql, [sbj_num], (err, result, fields) => {
       if (err) return reject(err);
       // console.log(result);
-      if (result[0].cnt !== 0 && result[0].cnt >= result[0].sub_person) {
+      if (result[0].cnt !== 0 && result[0].cnt >= result[0].sub_person) {// 신청 인원이 0이 아닐때 and 
+        //신청인원>=수강최대인원 일때
         possible = false;
         console.log("▶ 신청 인원이 마감되었습니다.");
       }
@@ -65,11 +69,14 @@ async function checkConditions(num, sbj_num) {
     (list join student on list.num = student.num) join subject
     on list.sub_num = subject.sub_num
     where student.num=?
-    group by student.num;`;
+    group by student.num;`;// 특정 학번(num), list(수강신청 테이블)에서 특정 학번인 과목학점(sub_credit)의 합,
+    // 학생 테이블에서 특정학번의 수강가능 학점(crdit)을 학번으로 그룹화함
     connection.query(sql, [num], (err, result, fields) => {
       if (err) return reject(err);
       // console.log(result);
-      if (result.length !== 0 && result[0].sum >= result[0].credit) {
+      if (result.length !== 0 && result[0].sum >= result[0].credit) {// result.lenght(num,sum, student.credit)가 조회가 안되면
+        //객체값이 비어 있기에 0을 가짐
+        //즉 result.lenght 객체가 비어있지 않은 경우 and sum>=result일 경우 
         possible = false;
         console.log("▶ 이수 학점을 초과했습니다.");
       }
@@ -78,8 +85,9 @@ async function checkConditions(num, sbj_num) {
   });
 
   await Promise.all([dupPromise, capacityPromise, creditPromise]);
+  // 위에서 거친 조건들의 결과(resolve or reject)를 받아 각 조건들이 정상 수행 됬는지 Promise.all
   // console.log("통과: ", possible);
-  return possible;
+  return possible; //조건에 걸리지 않았으면 true 리턴
 }
 
 // 메인함수

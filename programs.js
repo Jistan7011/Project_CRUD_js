@@ -25,7 +25,7 @@ async function select_menu(num) {
       await rps.read_personal_subject(num);
       await Input.getEnter();
       // 과목삭제 함수
-      // await dps.delete_personal_subject(num);
+      await dps.main(num);
       await Input.getEnterComment();
     } else if (menu === "2") {
       console.log("▶ 과목조회 및 수강신청");

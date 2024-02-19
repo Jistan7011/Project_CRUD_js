@@ -1,15 +1,15 @@
-let colum = new Array();
-const ko = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-// colum = ['가','나나나','c']
-let print
+let str1 = '가가'
+let str2 = '나'
+let str3 = '000'
+let str4 = 'asdf'
+let ko = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+var num = /[0-9]/
+let space
 
-// let testObject =  {
-// sub_num: 101,
-// sub_name: '열역학',
-// sub_professor: '김정수',
-// sub_person: 40
-// }
-// let title = ['강의번호','강의명','담당교수','수강인원']
+console.log(str1.length)
+console.log(str2.length)
+console.log(str3.length)
+console.log(str4.length)
 
 function make_table(object){
   let colum
@@ -30,4 +30,12 @@ function make_table(object){
     }
   }
 }
-module.exports = {make_table}
+
+if(ko.test(str1)){
+  space = 10-(str1.length)*2
+  console.log(space)
+}else if(num.test(str1)){
+  space = 10
+
+}
+

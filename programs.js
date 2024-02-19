@@ -17,6 +17,7 @@ let connection = mysql.createConnection({
 async function select_menu(num) {
   while (true) { 
     console.clear();
+    console.log(`로그인 완료됐습니다.`)
     console.log(`1.<수강확인 및 삭제> 2.<과목조회 및 수강신청> 3.<로그아웃>`);
     let menu = await Input.getUserInput();
     if (menu === "1") {

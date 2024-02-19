@@ -28,21 +28,21 @@ async function read_personal_subject(num){
   });
 }
 
-// read_personal_subject(4);
+read_personal_subject(4);
 module.exports = {read_personal_subject};
 
 
 // list에 임의의 자료 추가
-// function list_update(){
-//   for(var i=1; i<6; i++){
-//     for(var j=1; j<5; j++){
-//       for(var k=1; k<4; k++){
-//         let sql = `insert into list values(${i},${(j*100)+k},now())`
-//         console.log(sql)
-//         connection.query(sql)
-//       }
-//     }
-//   }
-// }
+function list_update(){
+  for(var i=2; i<6; i++){
+    for(var j=3; j<5; j++){
+      for(var k=1; k<4; k++){
+        let sql = `insert into list values(${i},${(j*100)+k},now())`
+        console.log(sql)
+        connection.query(sql)
+      }
+    }
+  }
+}
 
-// list_update(); 
+list_update(); 
